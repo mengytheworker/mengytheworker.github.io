@@ -6,7 +6,7 @@
 */
 
 // Fetch pcat json
-fetch(new Request('http://192.168.1.100:8000/pcat2.json'))
+fetch(new Request('http://mengytheworker.github.io/pcat2.json'))
 .then((response) => {
     if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
