@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="styles/style.css" rel="stylesheet">
+    <title>Graphical Pulsar Catalogue</title>
+  </head>
+  <body>
+    <h1>Graphical Pulsar Catalogue</h1>
+    <canvas id="map"></canvas>
+    <script src="scripts/main.js"></script>
+  </body>
+</html>

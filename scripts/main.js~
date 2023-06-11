@@ -1,0 +1,13 @@
+// Retrieve canvas element
+const canvas = document.getElementById("map");
+
+// If the browser supports canvas,
+if (canvas.getContext) {
+    // then retrieve canvas context
+    const context = canvas.getContext("2d");
+
+    context.fillStyle = "white";
+    context.fillRect(0.0, 0.0, canvas.width, 0.25*canvas.width);
+} else {
+    // IMPLEMENT CANVAS-UNSUPPORTED CODE!
+}

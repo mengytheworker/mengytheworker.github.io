@@ -1,0 +1,63 @@
+* {
+    background-color: rgb(240, 240, 240);
+}
+
+p {
+    font-family: system-ui, ui-rounded, sans-serif, serif;
+    font-size: 2.0vmin;
+    line-height: 3vmin;
+}
+
+p#back {
+    margin-inline-start: 20vmin;
+    margin-top: 20vmin;
+}
+
+p#app {
+    text-align: center;
+}
+
+a#back:link {
+    text-decoration: none;
+    color: black;
+}
+
+a#back:visited {
+    color: black;
+}
+
+a#back:hover {
+    color: #007aff;
+}
+
+a#back:active {
+    color: #007aff;
+}
+
+a#back:focus {
+    color: #007aff;
+    text-decoration: none;
+}
+
+a#app:link {
+    text-decoration: none;
+    color: #007aff;
+}
+
+a#app:visited {
+    text-decoration: none;
+    color: #007aff;
+}
+
+a#app:hover {
+    font-weight: 500;
+}
+
+a#app:active {
+    font-weight: 500;
+}
+
+a#app:focus {
+    font-weight: 500;
+    text-decoration: none;
+}
