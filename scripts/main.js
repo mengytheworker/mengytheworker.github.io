@@ -1,7 +1,8 @@
 /*
    Graphic Pulsar Catalogue - main.js
-   version: 0.1.0
-   Date: 29 Mar 2023
+   version: 0.1.1
+   Date: 29 Mar 2023 -- initial version 0.1.0
+         25 Jun 2023 -- add solid colors for pulsars with profile collected v0.1.1
    Author: meng yu
 */
 
@@ -121,7 +122,7 @@ function openDb(pcat) {
     };
 }
 
-// Array to store pulsar J2000 positions and DM, proper motion
+// Array to store pulsar J2000 positions and DM, proper motion etc.
 const positions = [];
 
 // Pulsar coordinates on map
@@ -170,6 +171,12 @@ function readStore(store) {
 
             position.push(cursor.value.jname);
 
+            if (typeof(cursor.value.profile) === 'undefined') {
+                position.push('np');
+            } else {
+                position.push('yp');
+            }
+
             positions.push(position); 
             cursor.continue();
         } else {
@@ -197,6 +204,9 @@ function readStore(store) {
 
                     // Jname
                     coord.push(posn[6]);
+
+                    // Profile flag
+                    coord.push(posn[7]);
                 } else {
                     coord.push(NaN);
                     coord.push(NaN);
@@ -205,6 +215,7 @@ function readStore(store) {
                     coord.push(posn[4]);
                     coord.push(posn[5]);
                     coord.push(posn[6]);
+                    coord.push(posn[7]);
                 }
 
                 return coord;
@@ -261,41 +272,118 @@ function plotPulsars(scale, xToW, yToH, offsetX, offsetY) {
         if (!Number.isNaN(coords[i][0]) && !Number.isNaN(coords[i][1])) {
             if (!Number.isNaN(coords[i][2])) {
                 if (coords[i][3] < 0.01) {
-                    context.strokeStyle = '#007aff';
-                    if (dpr === 2) {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/400.0*sizeMin, 0.0, Math.PI*2, true);
-                    } else {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/800.0*sizeMin, 0.0, Math.PI*2, true);
+                    if (coords[i][7] === 'np') {
+                        context.strokeStyle = '#007aff';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/400.0*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/800.0*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                    } else if (coords[i][7] === 'yp') {
+                        context.strokeStyle = '#007aff';
+                        context.fillStyle = 'rgba(0,122,255,0.1)';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/400.0*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/800.0*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                        context.fill();
+                        context.fillStyle = 'black';
                     }
                 } else {
-                    context.strokeStyle = 'black';
-                    if (dpr === 2) {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/400.0*sizeMin, 0.0, Math.PI*2, true);
-                    } else {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/800.0*sizeMin, 0.0, Math.PI*2, true);
+                    if (coords[i][7] === 'np') {
+                        context.strokeStyle = 'black';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/400.0*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/800.0*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                    } else if (coords[i][7] === 'yp') {
+                        context.strokeStyle = 'black';
+                        context.fillStyle = 'rgba(0,0,0,0.1)';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/400.0*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, Math.log(coords[i][2])/800.0*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                        context.fill();
+                        context.fillStyle = 'black';
                     }
                 }
             } else {
                 if (coords[i][3] < 0.01) {
-                    context.strokeStyle = '#007aff';
-                    if (dpr === 2) {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.01*sizeMin, 0.0, Math.PI*2, true);
-                    } else {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.005*sizeMin, 0.0, Math.PI*2, true);
+                    if (coords[i][7] === 'np') {
+                        context.strokeStyle = '#007aff';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.01*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.005*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                    } else if (coords[i][7] === 'yp') {
+                        context.strokeStyle = '#007aff';
+                        context.fillStyle = 'rgba(0,122,255,0.1)';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.01*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.005*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                        context.fill();
+                        context.fillStyle = 'black';
                     }
                 } else {
-                    context.strokeStyle = 'black';
-                    if (dpr === 2) {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.01*sizeMin, 0.0, Math.PI*2, true);
-                    } else {
-                        context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.005*sizeMin, 0.0, Math.PI*2, true);
+                    if (coords[i][7] === 'np') {
+                        context.strokeStyle = 'black';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.01*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.005*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                    } else if (coords[i][7] === 'yp') {
+                        context.strokeStyle = 'black';
+                        context.fillStyle = 'rgba(0,0,0,0.1)';
+
+                        if (dpr === 2) {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.01*sizeMin, 0.0, Math.PI*2, true);
+                        } else {
+                            context.arc((coords_[i]*scale+xToW*2*Math.PI)*canvas.width/(2*Math.PI)+offsetX, (1.0-coords[i][1]*scale+yToH)*canvas.height*0.5+offsetY, 0.005*sizeMin, 0.0, Math.PI*2, true);
+                        }
+
+                        context.closePath();
+                        context.stroke();
+                        context.fill();
+                        context.fillStyle = 'black';
                     }
                 }
             }
         }
-
-        context.closePath();
-        context.stroke();
 
         // Draw line for pm
         if (!Number.isNaN(coords[i][0]) && !Number.isNaN(coords[i][1]) && !Number.isNaN(coords[i][3]) && !Number.isNaN(coords[i][4] && !Number.isNaN(coords[i][5]))) {
