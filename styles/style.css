@@ -138,6 +138,31 @@ div#item-search {
     font-size: 1.5vmin;
 }
 
+a#tutorial:link {
+    text-decoration: underline;
+    color: black;
+    font-weight: 700;
+}
+
+a#tutorial:visited {
+    text-decoration: underline;
+    color: black;
+    font-weight: 700;
+}
+
+a#tutorial:hover {
+    font-weight: 800;
+}
+
+a#tutorial:active {
+    font-weight: 800;
+}
+
+a#tutorial:focus {
+    font-weight: 800;
+    text-decoration: none;
+}
+
 canvas#map {
     width: 100%;
     height: 50%;
