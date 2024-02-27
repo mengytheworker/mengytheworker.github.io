@@ -61,3 +61,26 @@ a#donation:focus {
     font-weight: 500;
     text-decoration: none;
 }
+
+a#buymeacoffee:link {
+    text-decoration: none;
+    color: goldenrod
+}
+
+a#buymeacoffee:visited {
+    text-decoration: none;
+    color: goldenrod;
+}
+
+a#buymeacoffee:hover {
+    font-weight: 500;
+}
+
+a#buymeacoffee:active {
+    font-weight: 500;
+}
+
+a#buymeacoffee:focus {
+    font-weight: 500;
+    text-decoration: none;
+}

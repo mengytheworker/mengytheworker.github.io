@@ -9,8 +9,8 @@ p {
 }
 
 p#back {
-    margin-inline-start: 20vmin;
-    margin-top: 20vmin;
+    margin-inline-start: 10vmin;
+    margin-top: 10vmin;
 }
 
 p#app {
@@ -60,4 +60,26 @@ a#app:active {
 a#app:focus {
     font-weight: 500;
     text-decoration: none;
+}
+
+h1#note_head {
+    font-family: serif, system-ui, ui-rounded, sans-serif;
+    font-size: 2.5vmin;
+    text-align: center;
+}
+
+p#note_text {
+    font-family: serif, system-ui, ui-rounded, sans-serif;
+    font-size: 2.0vmin;
+    text-align: left;
+    margin-inline-start: 40vmin;
+    margin-inline-end: 40vmin;
+}
+
+a#gtable:link {
+    color: black
+}
+
+a#gtable:visited {
+    color: black
 }
