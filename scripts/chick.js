@@ -2,7 +2,6 @@ import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 
 // Create scene
 const scene = new THREE.Scene();
-console.log(window.getComputedStyle(document.body).backgroundColor);
 scene.background = new THREE.Color(0.87, 0.87, 0.87);
 
 // Create renderer
@@ -77,26 +76,43 @@ window.addEventListener('resize', () => {
 });
 
 // Event listener: mousemove
-document.addEventListener('mousemove', (event) => {
-    if (event instanceof MouseEvent) {
-        // Get the bounding rectangle of the #chick div
-        const rect = container.getBoundingClientRect();
+document.addEventListener('mousemove', handleMovement);
 
-        // Normalize event coordinates
-        const mouse = new THREE.Vector2();
-        mouse.x = +( event.clientX - rect.left ) / rect.width * 2 - 1;
-        mouse.y = -( event.clientY - rect.top ) / rect.height * 2 + 1;
+// Event listener: touchmove
+document.addEventListener('touchmove', handleMovement, { passive: false });
 
-        // Calculate desired rotation based on mouse position
-        // Assuming the center of the screen (0,0) results in no rotation,
-        // and the edges of the screen result in maximum rotation of PI/2 or -PI/2.
-        const rotationX = Math.PI / 36 * -mouse.y; // Vertical mouse position affects X rotation
-        const rotationY = Math.PI / 12 * +mouse.x; // Horizontal mouse position affects Y rotation
+// Function to handle mouse and touch movements
+function handleMovement(event) {
+    // Prevent default behavior to avoid scrolling on touch devices
+    event.preventDefault();
 
-        // Apply calculated rotation directly, ensuring it's continuous and within the desired range
-        eye_left.rotation.x = rotationX;
-        eye_left.rotation.y = rotationY;
-        eye_right.rotation.x = rotationX;
-        eye_right.rotation.y = rotationY;
+    let clientX, clientY;
+
+    if (event.type.startsWith('touch')) {
+        // Use the first touch point for simplicity
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+    } else {
+        // Mouse event properties
+        clientX = event.clientX;
+        clientY = event.clientY;
     }
-});
+
+    // Get the bounding rectangle of the #chick div
+    const rect = container.getBoundingClientRect();
+
+    // Normalize event coordinates
+    const mouse = new THREE.Vector2();
+    mouse.x = +(clientX - rect.left) / rect.width * 2 - 1;
+    mouse.y = -(clientY - rect.top) / rect.height * 2 + 1;
+
+    // Calculate desired rotation based on mouse/touch position
+    const rotationX = Math.PI / 36 * -mouse.y; // Vertical position affects X rotation
+    const rotationY = Math.PI / 12 * +mouse.x; // Horizontal position affects Y rotation
+
+    // Apply calculated rotation directly, ensuring it's continuous and within the desired range
+    eye_left.rotation.x = rotationX;
+    eye_left.rotation.y = rotationY;
+    eye_right.rotation.x = rotationX;
+    eye_right.rotation.y = rotationY;
+}
