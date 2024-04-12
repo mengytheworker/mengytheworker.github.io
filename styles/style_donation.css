@@ -8,6 +8,11 @@ p {
     line-height: 3vmin;
 }
 
+#chick {
+    width: 100vw;
+    height: 10vh;
+}
+
 p#back {
     margin-inline-start: 20vmin;
     margin-top: 20vmin;
