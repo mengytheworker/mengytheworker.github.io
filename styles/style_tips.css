@@ -1,0 +1,67 @@
+* {
+    background-color: white;
+}
+
+p {
+    font-family: system-ui, ui-rounded, sans-serif, serif;
+    font-size: 2.0vmin;
+    line-height: 3vmin;
+}
+
+p#back {
+    margin-inline-start: 20vmin;
+    margin-top: 10vmin;
+}
+
+a#back:link {
+    text-decoration: none;
+    color: black;
+}
+
+a#back:visited {
+    color: black;
+}
+
+a#back:hover {
+    color: #007aff;
+}
+
+a#back:active {
+    color: #007aff;
+}
+
+a#back:focus {
+    color: #007aff;
+    text-decoration: none;
+}
+
+h1#tip_head {
+    font-family: system-ui, ui-rounded, sans-serif, serif;
+    font-size: 2.0vmin;
+    text-align: left;
+    margin-top: 4vmin;
+    margin-inline-start: 21.5vmin;
+    margin-inline-end: 21.5vmin;
+}
+
+p#tip_text {
+    font-family: system-ui, ui-rounded, sans-serif, serif;
+    font-size: 1.7vmin;
+    text-align: left;
+    margin-inline-start: 22.6vmin;
+    margin-inline-end: 22.6vmin;
+}
+
+p#tip_code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5vmin;
+    text-align: left;
+    margin-inline-start: 30vmin;
+    margin-inline-end: 20vmin;
+    background-color: rgb(240, 240, 240);
+}
+
+a#tip_code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5vmin;
+}

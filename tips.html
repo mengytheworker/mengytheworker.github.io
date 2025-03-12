@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJWH5SX1T4"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-TJWH5SX1T4');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Tips gained when I was developing.">
+        <meta name="keywords" content="blog, code, program, xcode">
+        <link href="styles/style_tips.css" rel="stylesheet">
+        <title>Graphic Pulsar Catalogue - Coding Tips</title>
+    </head>
+    <body>
+        <p id="back">
+            <a id="back" href="index.html">&lang; Back home</a>
+        </p>
+        <h1 id="tip_head">
+            . How did I add an LZ4 XCFramework to my project
+        </h1>
+        <p id="tip_text">
+            I added an LZ4 XCFramework into my Xcode project for an iOS app. Here is how:<br>
+            . Download LZ4 source code<br>
+        </p>
+        <p id="tip_code">
+            % git clone https://github.com/lz4/lz4.git<br>
+            % cd lz4<br>
+        </p>
+        <p id="tip_text">
+            . Compile for iOS device (arm64)<br>
+        </p>
+        <p id="tip_code">
+            % make clean<br>
+            % make liblz4.a TARGET_OS=iOS<br>
+            % mv liblz4.a liblz4-ios-device.a<br>
+        </p>
+        <p id="tip_text">
+            . Compile for iOS simulator (arm64 for Apple Silicon CPU, x86_64 for Intel CPU)<br>
+        </p>
+        <p id="tip_code">
+            % make clean<br>
+            % make liblz4.a TARGET_OS=iOSSimulator TARGET_ARCHS="arm64 x86_64"<br>
+            % mv liblz4.a liblz4-ios-simulator.a<br>
+        </p>
+        <p id="tip_text">
+            . Create XCFramework
+        </p>
+        <p id="tip_code">
+            % xcodebuild -create-xcframework -library liblz4-ios-device -headers /path/to/lz4/include -library liblz4-ios-simulator -headers /path/to/lz4/include -output liblz4-ios.xcframework<br>
+        </p>
+        <p id="tip_text">
+            Here I got an error from <a id="tip_code">xcodebuild -create-xcframework</a>: A library with the identifier 'macos-arm64' already exists. Then I ran <a id="tip_code">lipo -info</a> to check architectures. <a id="tip_code">lipo -info liblz4-ios-device.a</a> output 'Non-fat file liblz4-ios-device.a is architecture: arm64'. This is expected. <a id="tip_code">lipo -info liblz4-ios-simulator.a</a> output 'Non-fat file liblz4-ios-simulator.a is architecture: arm64'. This is unexpected. The <a id="tip_code">make</a> command had ignored <a id="tip_code">x86_64</a>. So I had to build the library file for simulator manually:
+        </p>
+        <p id="tip_code">
+            % rm -v liblz4-ios-simulator.a<br>
+            % make clean<br>
+             #Build for x86_64<br>
+            % clang -arch x86_64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -c lib/lz4.c -o liblz4-ios-simulator-x86_64.o<br>
+             #Build for arm64<br>
+            % clang -arch arm64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -c lib/lz4.c -o liblz4-ios-simulator-arm64.o<br>
+             #Create static libraries
+            % ar rcs liblz4-ios-simulator-x86_64.a liblz4-ios-simulator-x86_64.o<br>
+            % ar rcs liblz4-ios-simulator-arm64.a liblz4-ios-simulator-arm64.o<br>
+             #Merge into a fat library<br>
+            % lipo -create -output liblz4-ios-simulator.a liblz4-ios-simulator-x86_64.a liblz4-ios-simulator-arm64.a<br>
+        </p>
+        <p id="tip_text">
+            Then I ran <a id="tip_code">lipo -info liblz4-ios-simulator.a</a>, it output 'Architectures in the fat file: liblz4-ios-simulator.a are: arm64 x86_64'. I ran the <a id="tip_code">xcodebuild -create-xcframework</a>, I got the <a id="tip_code">liblz4-ios.xcframework</a>. I <a id="tip_code">ls liblz4-ios.xcframework</a>, I found it had subdirectories: <a id="tip_code">ios-arm64_x86_64-simulator/, macos-arm64/</a>. The <a id="tip_code">ios-arm64_x86_64-simulator/</a> one is expected, but the <a id="tip_code">macos-arm64/</a> is not expected, it should be <a id="tip_code">ios-arm64/</a>.<br>
+        </p>
+        <p id="tip_text">
+            Then I cleaned the previously made <a id="tip_code">liblz4-ios-device.a</a>, remade the library with<br>
+        </p>
+        <p id="tip_code">
+            % clang -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=12.0 -c lib/lz4.c -o liblz4-ios-device.o<br>
+            % ar rcs liblz4-ios-device.a liblz4-ios-device.o<br>
+        </p>
+        <p id="tip_text">
+            The <a id="tip_code">-miphoneos-version-min</a> option explicitly makes the object file for iOS, not macOS. I reran the <a id="tip_code">xcodebuild -create-xcframework</a>, in the resultant <a id="tip_code">liblz4-ios.xcframework</a>, the expected <a id="tip_code">ios-arm64/</a> appeared; it has the library liblz4-ios-device.a.<br>
+        </p>
+        <p id="tip_text">
+            . Drag and drop the <a id="tip_code">liblz4-ios.xcframework</a> into Xcode's Frameworks and Libraries section.<br>
+            . Done.<br><br>
+        </p>
+    </body>
+</html>

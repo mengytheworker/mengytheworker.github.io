@@ -8,6 +8,7 @@
 
 // Fetch pcat json
 fetch(new Request('https://mengytheworker.github.io/pcat2.json'))
+//fetch(new Request('http://localhost:8000/pcat2.json'))
 .then((response) => {
     if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
