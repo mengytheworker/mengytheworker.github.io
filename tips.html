@@ -21,8 +21,22 @@
         <p id="back">
             <a id="back" href="index.html">&lang; Back home</a>
         </p>
-        <h1 id="tip_head">
-            . How did I add an LZ4 XCFramework to my project
+        <p id="tip_intro">
+            Here are the coding tips that I think are worth sharing:
+        </p>
+        <!-- Table of Contents -->
+        <div id="tip_toc">
+            <h1 id="tip_toc_head">
+                Table of Contents
+            </h1>
+            <ul id="tip_toc_list">
+                <li><a class="tip_link" href="#tip_lz4">How did I add an LZ4 XCFramework to my Xcode project</a></li>
+                <li><a class="tip_link" href="#tip_cfitsio">How did I add an CFITSIO XCFramework to my Xcode project</a></li>
+            </ul>
+        </div>
+        <!-- LZ4 XCFramework -->
+        <h1 id="tip_lz4" class="tip_head">
+            . How did I add an LZ4 XCFramework to my Xcode project
         </h1>
         <p id="tip_text">
             I added an LZ4 XCFramework into my Xcode project for an iOS app. Here is how:<br>
@@ -86,6 +100,68 @@
         <p id="tip_text">
             . Drag and drop the <a id="tip_code">liblz4-ios.xcframework</a> into Xcode's Frameworks and Libraries section.<br>
             . Done.<br><br>
+        </p>
+        <!-- CFITSIO framework -->
+        <h1 id="tip_cfitsio" class="tip_head">
+            . How did I add an CFITSIO XCFramework to my Xcode project
+        </h1>
+        <p id="tip_text">
+            . Download CFITSIO source with
+        </p>
+        <p id="tip_code">
+            % curl -O https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz<br>
+            % tar -xvf cfitsio_latest.tar<br>
+            % cd cfitsio<br>
+        </p>
+        <p id="tip_text">
+            . Compile CFITSIO for iOS device with
+        </p>
+        <p id="tip_code">
+            % make distclean<br>
+            % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib CC="$(xcrun --sdk iphoneos --find clang)" CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=12.0" --prefix="/path/to/install/into"<br>
+            % make<br>
+            % make install<br>
+            % mv -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-ios-device.a<br>
+        </p>
+        <p id="tip_text">
+            In here, I ran into an error at <a id="tip_code">make install</a>: <a id="tip_code">cfileio.c:14:12: fatal error: curl/curl.h file not found. Then I added <a id="tip_code">--disable-curl</a> option for <a id="tip_code">configure</a>, cause I don't need remote file access via HTTP/FTP. Then I ran <a id="tip_code">make</a>, the <a id="tip_code">curl</a> problem seemed okay, but I saw error: <a id="tip_code">utilities/fpackutil.c:926:17: error: 'system' is unavaliable: not available on iOS.</a> The <a id="tip_code">system()</a> function is not available on iOS for security reasons. So I found the line <a id="tip_code">system(command)</a> in <a id="tip_code">fpackutil.c</a> and commented it out. Then I successfully built the library file for ios device.
+        </p>
+        <p id="tip_text">
+            . Compile for iOS simulator (arm64) with
+        </p>
+        <p id="tip_code">
+            % make distclean<br>
+            % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib --disable-curl CC="$(xcrun --sdk iphonesimulator --find clang)" CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -mios-simulator-version-min=12.0" --prefix="/path/to/install/into"<br>
+            % make<br>
+            % make install<br>
+            % mv -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-arm64.a<br>
+        </p>
+        <p id="tip_text">
+            . Compile for iOS simulator (x86_64) with
+        </p>
+        <p id="tip_code">
+            % make distclean<br>
+            % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib --disable-curl CC="$(xcrun --sdk iphonesimulator --find clang)" CFLAGS="-arch x86_64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -mios-simulator-version-min=12.0" --prefix="/path/to/install/into"<br>
+            % make<br>
+            % make install<br>
+            % mv -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-x86_64.a<br>
+        </p>
+        <p id="tip_text">
+            . Create universal simulator library with
+        </p>
+        <p id="tip_code">
+            % cd /my/lib<br>
+            % lipo -create libcfitsio-iossimulator-arm64.a libcfitsio-iossimulator-x86_64.a -output libcfitsio-ios-simulator.a<br>
+        </p>
+        <p id="tip_text">
+            . Create XCFramework with
+        </p>
+        <p id="tip_code">
+            % xcodebuild -create-xcframework -library libcfitsio-ios-device.a -headers /path/to/install/into/include -library libcfitsio-ios-simulator.a -headers /path/to/install/into/include -output libcfitsio-ios.xcframework<br>
+        </p>
+        <p id="tip_text">
+            . Drag and drop the libcfitsio-ios.xcframework into Xcode's Frameworks and Libraries section.<br>
+            . Done.<br>
         </p>
     </body>
 </html>

@@ -35,17 +35,77 @@ a#back:focus {
     text-decoration: none;
 }
 
-h1#tip_head {
+.tip_link:link {
+    text-decoration: none;
+    color: black;
+    background-color: whitesmoke;
+}
+
+.tip_link:visited {
+    color: black;
+    background-color: whitesmoke;
+    text-decoration: none;
+}
+
+.tip_link:hover {
+    color: goldenrod;
+    font-size: 1.72vmin;
+}
+
+.tip_link:active {
+    color: goldenrod;
+    text-decoration: none;
+}
+
+.tip_link:focus {
+    color: goldenrod;
+    text-decoration: none;
+}
+
+div#tip_toc {
+    font-family: system-ui, ui-rounded, sans-serif, serif;
+    margin-inline-start: 40vmin;
+    margin-inline-end: 40vmin;
+    background-color: whitesmoke;
+}
+
+h1#tip_toc_head {
+    font-size: 3.0vmin;
+    text-align: center;
+    background-color: whitesmoke;
+}
+
+ul#tip_toc_list {
+    font-size: 1.7vmin;
+    text-align: left;
+    background-color: whitesmoke;
+}
+
+li {
+    padding-top: 0vmin;
+    padding-bottom: 1vmin;
+    background-color: whitesmoke;
+}
+
+.tip_head {
     font-family: system-ui, ui-rounded, sans-serif, serif;
     font-size: 2.0vmin;
     text-align: left;
     margin-top: 4vmin;
     margin-inline-start: 21.5vmin;
     margin-inline-end: 21.5vmin;
+    padding-top: 4vmin;
+}
+
+p#tip_intro {
+    font-size: 1.7vmin;
+    text-align: left;
+    margin-inline-start: 21.5vmin;
+    margin-inline-end: 21.5vmin;
+    padding-bottom: 4vmin;
 }
 
 p#tip_text {
-    font-family: system-ui, ui-rounded, sans-serif, serif;
     font-size: 1.7vmin;
     text-align: left;
     margin-inline-start: 22.6vmin;
