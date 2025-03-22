@@ -121,7 +121,7 @@
             % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib CC="$(xcrun --sdk iphoneos --find clang)" CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=12.0" --prefix="/path/to/install/into"<br>
             % make<br>
             % make install<br>
-            % mv -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-ios-device.a<br>
+            % cp -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-ios-device.a<br>
         </p>
         <p id="tip_text">
             In here, I ran into an error at <a id="tip_code">make install</a>: <a id="tip_code">cfileio.c:14:12: fatal error: curl/curl.h file not found. Then I added <a id="tip_code">--disable-curl</a> option for <a id="tip_code">configure</a>, cause I don't need remote file access via HTTP/FTP. Then I ran <a id="tip_code">make</a>, the <a id="tip_code">curl</a> problem seemed okay, but I saw error: <a id="tip_code">utilities/fpackutil.c:926:17: error: 'system' is unavaliable: not available on iOS.</a> The <a id="tip_code">system()</a> function is not available on iOS for security reasons. So I found the line <a id="tip_code">system(command)</a> in <a id="tip_code">fpackutil.c</a> and commented it out. Then I successfully built the library file for ios device.
@@ -134,7 +134,7 @@
             % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib --disable-curl CC="$(xcrun --sdk iphonesimulator --find clang)" CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -mios-simulator-version-min=12.0" --prefix="/path/to/install/into"<br>
             % make<br>
             % make install<br>
-            % mv -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-arm64.a<br>
+            % cp -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-arm64.a<br>
         </p>
         <p id="tip_text">
             . Compile for iOS simulator (x86_64) with
@@ -144,7 +144,7 @@
             % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib --disable-curl CC="$(xcrun --sdk iphonesimulator --find clang)" CFLAGS="-arch x86_64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -mios-simulator-version-min=12.0" --prefix="/path/to/install/into"<br>
             % make<br>
             % make install<br>
-            % mv -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-x86_64.a<br>
+            % cp -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-x86_64.a<br>
         </p>
         <p id="tip_text">
             . Create universal simulator library with
@@ -161,7 +161,13 @@
         </p>
         <p id="tip_text">
             . Drag and drop the libcfitsio-ios.xcframework into Xcode's Frameworks and Libraries section.<br>
-            . Done.<br>
+            . Done.
+        </p>
+        <p id="tip_text">
+            . When I built my Xcode project, I got a warning and an error.<br>The warning is <a id="tip_code">duplicate output file '/Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/include/lz4.h' on task: ProcessXCFramework /path/to/app/liblz4-ios.xcframework /Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/liblz4-ios-device.a ios.</a><br>The error is <a id="tip_code">Multiple commands produce '/Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/include/lz4.h'; Command: ProcessXCFramework /path/to/app/libcfitsio-ios.xcframework /Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/libcfitsio-ios-device.a ios; Command: ProcessXCFramework /path/to/app/liblz4-ios.xcframework /Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/liblz4-ios-device.a ios.</a><br>As I had also added an LZ4 framework into the project, this error happened because both <a id="tip_code">libcfitsio-ios.xcframework</a> and <a id="tip_code">liblz4-ios.xcframework</a> include the same header file <a id="tip_code">lz4.h</a>. To fix this issue, I rebuilt <a id="tip_code">libcfitsio-ios.xcframework</a> with exluding LZ4 headers by adding <a id="tip_code">-I/path/to/lz4/include</a> to <a id="tip_code">CFLAGS</a> and adding <a id="tip_code">-L/path/to/lz4/lib -llz4-ios-device/-llz4-iossimulator-arm64/-llz4-iossimulator-x86_64</a> to <a id="tip_code">LDFLAGS</a> for <a id="tip_code">configure</a>.
+        </p>
+        <p id="tip_text">
+            . Really done.
         </p>
     </body>
 </html>
