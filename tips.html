@@ -32,6 +32,7 @@
             <ul id="tip_toc_list">
                 <li><a class="tip_link" href="#tip_lz4">How did I add an LZ4 XCFramework to my Xcode project</a></li>
                 <li><a class="tip_link" href="#tip_cfitsio">How did I add an CFITSIO XCFramework to my Xcode project</a></li>
+                <li><a class="tip_link" href="#tip_sofa">How did I add an SOFA XCFramework to my Xcode project</a></li>
             </ul>
         </div>
         <!-- LZ4 XCFramework -->
@@ -168,6 +169,71 @@
         </p>
         <p id="tip_text">
             . Really done.
+        </p>
+        <!-- SOFA framework -->
+        <h1 id="tip_sofa" class="tip_head">
+            . How did I add an SOFA XCFramework to my Xcode project
+        </h1>
+        <p id="tip_text">
+            . After getting the sofa package, <a id="tip_code">cd</a> to the <a id="tip_code">src</a> subdirectory. Open the <a id="tip_code">makefile</a> with a text editor.<br>
+            . I changed <a id="tip_code">INSTALL_DIR</a> to a path I like. But because I didn't run <a id="tip_code">make install</a>, this doesn't matter much.<br>
+            . I changed <a id="tip_code">CCOMPC</a> to <a id="tip_code">/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang</a><br>
+            . I removed the original <a id="tip_code">CFLAGF</a> variable and added <a id="tip_code">CFLAGF_DEVICE</a> variable with setting it <a id="tip_code">-c -pedantic -Wall -O -arch arm64 -isysroot "$(xcrun --sdk iphoneos --show-sdk-path)" -miphoneos-version-min=12.0</a><br>
+            . I added <a id="tip_code">CFLAGF_SIM_ARM64</a> variable with setting it <a id="tip_code">-c -pedantic -Wall -O -target arm64-apple-ios-simulator -arch arm64 -isysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)" -miphoneos-version-min=12.0</a><br>
+            . I added <a id="tip_code">CFLAGF_SIM_X86_64</a> variable with setting it <a id="tip_code">-c -pedantic -Wall -O -target x86_64-apple-ios-simulator -arch x86_64 -isysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)" -miphoneos-version-min=12.0</a><br>
+            . After the <a id="tip_code">SOFA_OBS</a> variable, I added <a id="tip_code">SOFA_OBS_DEVICE = $(SOFA_OBS:.o=_device.o)</a>, <a id="tip_code">SOFA_OBS_SIM_ARM64 = $(SOFA_OBS:.o=_sim_arm64.o)</a> and <a id="tip_code">SOFA_OBS_SIM_X86_64 = $(SOFA_OBS:.o=_sim_x86_64.o)</a><br>
+            . In the TARGETS section, I changed <a id="tip_code">all:</a> to <a id="tip_code">libsofa_device.a libsofa_sim_arm64.a libsofa_sim_x86_64.a</a>
+            . Because I didn't run <a id="tip_code">make install</a>, <a id="tip_code">make uninstall</a>, <a id="tip_code">make check</a>, <a id="tip_code">make installcheck test</a> and <a id="tip_code">make realclean distclean</a> so I didn't change the corresponding targets.<br>
+            . I added <a id="tip_code">$(SOFA_OBS_DEVICE) $(SOFA_OBS_SIM_ARM64) $(SOFA_OBS_SIM_X86_64)</a> for <a id="tip_code">clean:</a> target.<br>
+            . Then in the TARGETS section, I added
+        </p>
+        <p id="tip_code">
+            # Build the device library<br>
+            libsofa_device.a: $(SOFA_OBS_DEVICE)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $(SOFA_OBS_DEVICE)<br><br>
+            
+            # Build the simulator libraries<br>
+            libsofa_sim_arm64.a: $(SOFA_OBS_SIM_ARM64)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $(SOFA_OBS_SIM_ARM64)<br><br>
+
+            libsofa_sim_x86_64.a: $(SOFA_OBS_SIM_X86_64)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $(SOFA_OBS_SIM_X86_64)<br>
+        </p>
+        <p id="tip_text">
+            . I commented out all under the "The list of object file dependencies".<br>
+            . Then I added
+        </p>
+        <p id="tip_code">
+            # Generic rule for device object files<br>
+            $(SOFA_OBS_DEVICE): iau%_device.o %.c sofa.h sofam.h<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(CCOMPC) $(CFLAGF_DEVICE) -o $@ $&lt;<br><br>
+            # Generic rule for simulator object files<br>
+            $(SOFA_OBS_SIM_ARM64): iau%_sim_arm64.o %.c sofa.h sofam.h<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(CCOMPC) $(CFLAGF_SIM_ARM64) -o $@ $&lt;<br><br>
+            $(SOFA_OBS_SIM_X86_64): iau%_sim_x86_64.o %.c sofa.h sofam.h<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(CCOMPC) $(CFLAGF_SIM_X86_64) -o $@ $&lt;
+        </p>
+        <p id="tip_text">
+            . After saving the changes for the <a id="tip_code">makefile</a>, I ran <a id="tip_code">make</a> with obtaining <a id="tip_code">libsofa_device.a</a>, <a id="tip_code">libsofa_sim_arm64.a</a> and <a id="tip_code">libsofa_sim_x86_64.a</a><br>
+            . Then I ran
+        </p>
+        <p id="tip_code">
+            % lipo -create libsofa_sim_arm64.a libsofa_sim_x86_64.a -output libsofa_sim.a
+        </p>
+        <p id="tip_text">
+            to combine the two simulator libraries.<br>
+            . Then I made a directory <a id="tip_code">include</a> and copied <a id="tip_code">sofa.h</a> and <a id="tip_code">sofam.h</a> into.<br>
+            . Then I ran
+        </p>
+        <p id="tip_code">
+            % xcodebuild -create-xcframework -library libsofa_device.a -headers /path/to/include -library libsofa_sim.a -headers /path/to/include -output libsofa-ios.xcframework
+        </p>
+        <p id="tip_text">
+            I obtained <a id="tip_code">libsofa-ios.xcframework</a>. I dragged the file into the Xcode project navigator under <a id="tip_code">Frameworks</a>. I added <a id="tip_code">#include <sofa.h></a> into <a id="tip_code">MyProject-Bridging-Header.h</a>
+        </p>
+        <p id="tip_text">
+            . Then in Xcode <a id="tip_code">Build Settings</a>, I set the bridging header file for <a id="tip_code">Objective-C Bridging Header</a>.<br>
+            . Done.
         </p>
     </body>
 </html>
