@@ -33,6 +33,7 @@
                 <li><a class="tip_link" href="#tip_lz4">How did I add an LZ4 XCFramework to my Xcode project</a></li>
                 <li><a class="tip_link" href="#tip_cfitsio">How did I add an CFITSIO XCFramework to my Xcode project</a></li>
                 <li><a class="tip_link" href="#tip_sofa">How did I add an SOFA XCFramework to my Xcode project</a></li>
+                <li><a class="tip_link" href="#tip_import">How did I import an XCFramework to my Xcode project</a></li>
             </ul>
         </div>
         <!-- LZ4 XCFramework -->
@@ -234,6 +235,22 @@
         <p id="tip_text">
             . Then in Xcode <a id="tip_code">Build Settings</a>, I set the bridging header file for <a id="tip_code">Objective-C Bridging Header</a>.<br>
             . Done.
+        </p>
+        <!-- Import XCFramework -->
+        <h1 id="tip_import" class="tip_head">
+            . How did I import an XCFramework to my Xcode project
+        </h1>
+        <p id="tip_text">
+            For example, I got <a id="tip_code">libsofa-ios.xcframework</a>, I would like to import it into my Xcode project. Here are what I am going to do:
+        </p>
+        <p id="tip_text">
+            . Click the project at the top of the navigation panel, click the target, go to the <a id="tip_code">General</a> tab, scroll down to <a id="tip_code">Frameworks, Libraries and Embeded Content</a>.<br>
+            . Click <a id="tip_code">+</a>, then <a id="tip_code">Add Other ...</a>, <a id="tip_code">Add Files ...</a>, choose the framework.<br>
+            . Set <a id="tip_code">Embed</a> as <a id="tip_code">Embed &amp; Sign</a>.<br>
+            . Select <a id="tip_code">File > New > File from Template ...</a>, choose <a id="tip_code">Header File (.h)</a>, name it <a id="tip_code">&lt;project name&gt;-Bridging-Header.h</a>, and save it in the main project folder.<br>
+            . Inside the bridging header file, add <a id="tip_code">#include &lt;sofa.h&gt;</a>
+            . Select the project in the navigation panel, select the target, go to <a id="tip_code">Build Settings</a>, find <a id="tip_code">Objective-C Bridging Header</a>, enter the relative path to the header file.<br>
+            . Done.<br>
         </p>
     </body>
 </html>
