@@ -1,85 +1,748 @@
-* {
-    background-color: rgb(240, 240, 240);
+body {
+    background-color: white;
+    color: black;
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: calc(1vw + 1vh);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
-
-p {
-    font-family: system-ui, ui-rounded, sans-serif, serif;
-    font-size: 2.0vmin;
-    line-height: 3vmin;
+body.dark-mode {
+    background-color: black;
+    color: white;
 }
-
-p#back {
-    margin-inline-start: 10vmin;
-    margin-top: 10vmin;
+body.dark-mode nav {
+    background-color: black;
 }
-
-p#app {
+body.dark-mode .nav-toggle {
+    color: white;
+}
+body.dark-mode nav .right svg {
+    color: white;
+}
+body.dark-mode #icon-sun {
+    display: inline;
+}
+body.dark-mode #icon-moon {
+    display: none;
+}
+body.dark-mode nav .left .logo {
+    filter: brightness(0) invert(1);
+}
+body.dark-mode nav .left ul li a,
+body.dark-mode nav .left ul li a:visited {
+    color: white;
+}
+body.dark-mode #video-pulsar-light {
+    display: none;
+}
+body.dark-mode #video-pulsar-dark {
+    display: block;
+}
+body.dark-mode #replay-button {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: transparent;
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 50%;
+    width: 1.4em;
+    height: 1.4em;
+    font-size: 2.2em;
+    line-height: 1.4em;
     text-align: center;
+    padding: 0;
+    cursor: pointer;
+    color: white;
+}
+body.dark-mode .privacy-text {
+    display: block;
+    color: white;
+    font-size: 0.3em;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.2;
+    margin-top: 0.6em;
+}
+body.dark-mode .privacy-divider {
+    color: white;
+    height: 1px;
+    width: fit-content;
+    min-width: 16em;
+    max-width: 100%;
+    background-color: currentColor;
+    margin: 0 0 0.4em 0;
+}
+body.dark-mode #demo-switch {
+    color: white;
 }
 
-a#back:link {
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 300;
+    padding: 0.5em 0.5em;
+}
+nav .left {
+    display: flex;
+    align-items: center;
+}
+nav .left .logo {
+    display: block;
+    width: clamp(20px, 1em, 40px);
+    height: clamp(20px, 1em, 40px);
+}
+nav .left ul {
+    list-style: none;
+    margin: 0;
+    margin-left: 2em;
+    padding: 0;
+    display: flex;
+    gap: 2em;
+    font-size: clamp(10px, 0.5em, 40px);
+}
+nav .left ul li:hover {
+    cursor: pointer;
+    text-shadow: 0 0 8px silver, 0 0 12px silver;
+}
+nav .left ul li a {
+    color: black;
     text-decoration: none;
+}
+nav .left ul li a:visited {
+    color: black;
+}
+nav .right {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: red;
+    font-size: clamp(15px, 0.7em, 40px);
+    margin-left: auto;
+    margin-right: 1em;
+}
+nav .right .heart,
+nav .right .heart:visited,
+nav .right .heart:hover,
+nav .right .heart:active {
+    position: relative;
+    text-decoration: none;
+    color: red;
+}
+nav .right .heart::after {
+    content: "Buy me a coffee!";
+    position: absolute;
+    top: 120%;
+    right: 50%;
+    transform: translateX(50%);
+    background: white;
+    color: black;
+    font-size: 0.65em;
+    padding: 0.3em 0.6em;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+body.dark-mode nav .right .heart::after {
+    background: black;
+    color: white;
+    text-shadow: 0 0 8px rgb(255, 149, 149), 0 0 12px rgb(255, 149, 149);
+}
+@media (hover: hover) {
+    nav .right .heart:hover,
+    nav .right .heart:hover > * {
+        cursor: pointer;
+        text-shadow: 0 0 8px red, 0 0 12px red;
+    }
+    nav .right .heart:hover::after {
+        opacity: 1;
+    }
+}
+nav .right .heart.show-hint {
+    text-shadow: 0 0 8px red, 0 0 12px red;
+}
+/* Allow JS to force-show the tooltip */
+nav .right .heart.show-hint::after {
+    opacity: 1;
+}
+
+nav .right button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+nav .right svg {
+    width: clamp(20px, 1.4vw, 40px);
+    height: clamp(20px, 1.4vw, 40px);
     color: black;
 }
 
-a#back:visited {
+#icon-sun {
+    display: none;
+}
+#icon-moon {
+    display: inline;
+}
+
+.video-script-container {
+    display: flex;
+    position: relative;
+    gap: 2em;
+    padding: 0.1em 1em 4em 1.2em;
+    align-items: center;
+}
+
+.video-container {
+    position: relative;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.demo-video {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    display: none;
+}
+
+#replay-button {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
+    border-radius: 50%;
+    width: 1.4em;
+    height: 1.4em;
+    font-size: 2.2em;
+    line-height: 1.4em;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
     color: black;
 }
 
-a#back:hover {
-    color: #007aff;
+.script-container {
+    width: 70%;
+    min-height: 60vh;
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
-a#back:active {
-    color: #007aff;
-}
-
-a#back:focus {
-    color: #007aff;
-    text-decoration: none;
-}
-
-a#app:link {
-    text-decoration: none;
-    color: #007aff;
-}
-
-a#app:visited {
-    text-decoration: none;
-    color: #007aff;
-}
-
-a#app:hover {
-    font-weight: 500;
-}
-
-a#app:active {
-    font-weight: 500;
-}
-
-a#app:focus {
-    font-weight: 500;
-    text-decoration: none;
-}
-
-h1#note_head {
-    font-family: serif, system-ui, ui-rounded, sans-serif;
-    font-size: 2.5vmin;
-    text-align: center;
-}
-
-p#note_text {
-    font-family: serif, system-ui, ui-rounded, sans-serif;
-    font-size: 2.0vmin;
+.script-1 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.8em;
+    opacity: 0;
+    transition: opacity 1s;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 25%;
+    max-width: 55%;
+    white-space: normal;
+    word-break: break-word;
     text-align: left;
-    margin-inline-start: 40vmin;
-    margin-inline-end: 40vmin;
+    pointer-events: none;
+    will-change: transform, opacity; /* for animation */
 }
 
-a#gtable:link {
-    color: black
+.script-1.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-a#gtable:visited {
-    color: black
+.script-2 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.8em;
+    opacity: 0;
+    transition: opacity 1s;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 25%;
+    max-width: 55%;
+    white-space: normal;
+    word-break: break-word;
+    text-align: left;
+    pointer-events: none;
+    will-change: transform, opacity; /* for animation */
+}
+
+.script-2.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.inline-btn-1 {
+    display: inline-block;
+    padding: 0.6em 0.6em;
+    border-radius: 1.2em;
+    background-color: #007aff;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 0.7em;
+}
+
+.inline-btn-2 {
+    display: inline-block;
+    padding: 0.6em 0.6em;
+    border-radius: 1.2em;
+    background-color: orange;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 0.7em;
+}
+
+.inline-app-name {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+    color: #007aff;
+}
+
+.app-link-1:link,
+.app-link-1:visited {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+    color: #007aff;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.25s ease;
+}
+
+.app-link-1:hover,
+.app-link-1:active,
+.app-link-1:focus {
+    transform: translateY(-0.15em);
+}
+
+.app-link-2 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
+    color: orange;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.privacy-text {
+    display: block;
+    color: black;
+    font-size: 0.3em;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.2;
+    margin-top: 0.6em;
+}
+
+.privacy-divider {
+    height: 1px;
+    width: fit-content;
+    min-width: 16em;
+    max-width: 100%;
+    background-color: currentColor;
+    margin: 0 0 0.4em 0;
+}
+
+#demo-switch {
+    position: absolute;
+    right: 0.5em;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    color: black;
+}
+
+.switch-out-script {
+    animation: rush-out-script 0.6s ease-in forwards;
+}
+
+.switch-out-video {
+    animation: rush-out-video 0.6s ease-in forwards;
+}
+
+.switch-in-script {
+    animation: rush-in-script 0.6s ease-out forwards;
+}
+
+.switch-in-video {
+    animation: rush-in-video 0.6s ease-out forwards;
+}
+
+@keyframes rush-out-script {
+    from {
+        opacity: 1;
+        transform: translateX(0) translateY(-50%);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(20vw) translateY(-50%);
+    }
+}
+
+@keyframes rush-out-video {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(30vw);
+    }
+}
+
+@keyframes rush-in-script {
+    from {
+        opacity: 0;
+        transform: translateX(-20vw) translateY(-50%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) translateY(-50%);
+    }
+}
+
+@keyframes rush-in-video {
+    from {
+        opacity: 0;
+        transform: translateX(-30vw);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Hamburger menu for narrow screens */
+.nav-toggle {
+    display: none;
+    position: relative;
+    left: 10%;
+    width: 16px;
+    height: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 0.3em;
+    color: black;
+}
+.nav-toggle span {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transition: transform 0.3s ease, top 0.3s ease; opacity: 0.3s ease;
+}
+.nav-toggle span:nth-child(1) {
+    top: 0;
+}
+.nav-toggle span:nth-child(2) {
+    top: 6px;
+}
+.nav-toggle span:nth-child(3) {
+    top: 12px;
+}
+nav.open .nav-toggle span:nth-child(1) {
+    top: 9px;
+    transform: rotate(45deg);
+}
+nav.open .nav-toggle span:nth-child(2) {
+    opacity: 0;
+}
+nav.open .nav-toggle span:nth-child(3) {
+    top: 9px;
+    transform: rotate(-45deg)
+}
+
+/* Narrow screen */
+@media (max-width: 700px) {
+    nav {
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+
+    nav .left .logo {
+        width: 3.5em;
+        height: 3.5em;
+        margin-left: 1em;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    nav .left ul {
+        flex-direction: column;
+        gap: 1rem;
+        width: 20%;
+        max-height: 0;
+        overflow: hidden;
+        background: transparent;
+        background-color: rgba(0, 0, 0, 0);
+        border-radius: 0 0 0 0;
+        backdrop-filter: blur(6px);
+        padding: 1em 0;
+        padding-left: 1.2rem;
+        box-sizing: border-box;
+        font-size: 1em;
+        position: absolute;
+        top: 3.8rem; /* sit right below nav */
+        left: 0;
+        margin-left: 7.5%;
+        opacity: 0;
+        transition: max-height 0.5s ease, opacity 0.5s ease;
+    }
+
+    /* Show menu when nav is toggled */
+    nav.open .left ul {
+        max-height: 300px;
+        padding: 1rem 0 1rem 1.1rem;
+        opacity: 1;
+    }
+
+    nav .right {
+        font-size: 1.9em;
+        margin: 0.3em;
+    }
+
+    nav .right svg {
+        width: 7vw;
+        height: 7vw;
+    }
+
+    .video-script-container {
+        flex-direction: column;
+    }
+
+    .video-container {
+        position: relative;
+        width: 70vw;
+        height: 70vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: transparent;
+    }
+
+    .script-container {
+        position: relative;
+        width: 80vw;
+        min-height: 15vh;
+        max-height: 20vh;
+        margin-top: 0em;
+        display: flex;
+        justify-content: center;
+    }
+
+    .script-1 {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        text-align: center;
+        margin: 0;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.5em;
+    }
+
+    .script-2 {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 100%;
+        text-align: center;
+        margin: 0;
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.5em;
+    }
+
+    .inline-btn-1 {
+        display: inline-block;
+        padding: 0.2em 0.6em;
+        border-radius: 1.4em;
+        background-color: #007aff;
+        color: white;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 0.7em;
+    }
+
+    .inline-btn-2 {
+        display: inline-block;
+        padding: 0.2em 0.6em;
+        border-radius: 1.4em;
+        background-color: orange;
+        color: white;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        font-size: 0.7em;
+    }
+
+    .demo-video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border: none;
+        background-color: transparent;
+    }
+
+    #replay-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+        pointer-events: auto;
+    }
+
+    .privacy-divider {
+        height: 1px;
+        width: fit-content;
+        min-width: 32em;
+        max-width: 100%;
+        background-color: currentColor;
+        margin: 0 0 0.4em 0;
+    }
+
+    #demo-switch {
+        font-size: 3em;
+    }
+    body.dark-mode #demo-switch {
+        right: 0.5em;
+        font-size: 3em;
+    }
+
+    @keyframes rush-out-video {
+        from {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateX(30vw);
+        }
+    }
+
+    @keyframes rush-in-video {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateX(-30vw);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0);
+        }
+    }
+
+    @keyframes rush-out-script {
+        from {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateX(30vw);
+        }
+    }
+
+    @keyframes rush-in-script {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) translateX(-30vw);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateX(0);
+        }
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .app-link-1 {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(0, 122, 255, 0.2);
+    }
+
+    .app-link-1:link,
+    .app-link-1:visited {
+     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+     font-weight: 600;
+     color: #007aff;
+     text-decoration: none;
+     display: inline-block;
+    }
+
+    .app-link-1:focus {
+        color: #007aff;
+        text-decoration: none;
+    }
+
+    .app-link-1:active {
+        color: #007aff;
+        text-decoration: none;
+        transform: none !important;
+        border-radius: 0.4em;
+    }
+
+    @keyframes triple-jump {
+        0% { transform: translateY(0); }
+
+        /* Jump 1 */
+        10% { transform: translateY(-0.4em);}
+        20% { transform: translateY(0); }
+
+        /* Jump 2 */
+        35% { transform: translateY(-0.4em); }
+        45% { transform: translateY(0); }
+
+        /* Jump 3 */
+        70% { transform: translateY(-0.4em); }
+        80% { transform: translateY(0); }
+
+        /* Rest */
+        100% { transform: translateY(0); }
+    }
+
+    .app-jump {
+        animation: triple-jump 12s cubic-bezier(0.45, 0.05, 0.1, 1);
+    }
+
+    nav .right .heart::after {
+        content: "Double tap to Buy me a coffee!";
+        right: 30%;
+        transform: translateX(30%);
+        font-size: 0.55em;
+    }
 }

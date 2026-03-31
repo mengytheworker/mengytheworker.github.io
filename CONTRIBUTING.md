@@ -1,12 +1,9 @@
 # Contributing Guide
 
-You're more than welcome to give a hand!
+You're more than welcome to give a hand! Thank you very much if you
 
-If you'd like to contribute, then just fork the repo, make changes, and create a pull request with asking me, mengytheworker, to review.
-You're also welcome to drop me emails: vela.yumeng@gmail.com.
+- email me at vela.yumeng@gmail.com to say what you think the current content of this page is not good, what you think the current version of the iOS apps I made is not good, what on radio astronomy you want to experience 
 
-The Graphic Pulsar Catalogue adopts the MIT license.
+- would like to help code; in this case, contact me and we talk what and how we go on
 
-You're more than welcome to give a hand! Thank you!
-
-mengytheworker
+Meng Yu

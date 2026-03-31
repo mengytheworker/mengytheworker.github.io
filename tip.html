@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJWH5SX1T4"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-TJWH5SX1T4');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0 viewport-fit=cover">
+        <meta name="description" content="This page is a subpage of Meng Yu's homepage. This page contains tips gained during the development of the iOS apps.">
+        <meta name="keywords" content="lz4, cfitsio, iau sofa, xcframework, xcode">
+        <link href="styles/style_tip.css" rel="stylesheet">
+        <link rel="icon" href="favicon.svg" type="image/svg+xml">
+        <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+        <link rel="shortcut icon" href="favicon.ico">
+        <title>MtW - Tip</title>
+    </head>
+</html>
+<body>
+    <nav>
+        <div class="left">
+            <a href="index.html">
+            <img src="favicon.svg" alt="Site Logo" class="logo">
+            </a>
+            <button class="nav-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li>
+                    <a href="about.html">What</a>
+                </li>
+                <li>
+                    <a href="pulsar.html">Pulsar</a>
+                </li>
+                <li>
+                    <a href="sky.html">408MHz</a>
+                </li>
+                <li>
+                    <a href="app.html">App</a>
+                </li>
+                <li>
+                    <a href="tip.html">Tip</a>
+                </li>
+                <li>
+                    <a href="fun.html">Fun</a>
+                </li>
+                <li>
+                    <a href="thanks.html">Thanks</a>
+                </li>
+            </ul>
+        </div>
+        <div class="right">
+            <div>
+                <a class="heart" href="https://www.buymeacoffee.com/mengytheworker" target="_blank">♡</a>
+            </div>
+            <button id="mode-toggle">
+                    <!-- Sun icon -->
+                <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22" stroke="currentColor" stroke-width="1.0" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"/>
+                <line x1="12" y1="3" x2="12" y2="4"/>
+                <line x1="12" y1="20" x2="12" y2="21"/>
+                <line x1="3" y1="12" x2="4" y2="12"/>
+                <line x1="20" y1="12" x2="21" y2="12"/>
+                <line x1="17.66" y1="17.66" x2="18.36" y2="18.36"/>
+                <line x1="17.66" y1="6.34" x2="18.36" y2="5.64"/>
+                <line x1="6.34" y1="6.34" x2="5.64" y2="5.64"/>
+                <line x1="6.34" y1="17.66" x2="5.64" y2="18.36"/>
+                </svg>
+
+                <!-- Moon icon -->
+                <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" 
+                viewBox="0 0 22 22" stroke="currentColor" stroke-width="1.5" fill="none">
+                <g transform="translate(12,12) scale(0.6) scale(-1,1) translate(-12,-12)">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 8 8 0 0 0 21 12.79z"/>
+                </g>
+                </svg>
+            </button>
+        </div>
+    </nav>
+    <main class="tip-container">
+        <button class="toc-toggle" aria-label="Open table of contents">
+            ⟩
+        </button>
+        <!-- LEFT: Table of Contents -->
+        <aside class="toc">
+            <p class="toc-intro">
+                In developing the mobile apps, I gained some experiences. I put them here as a kind of memorandum while they can also be a sharing:
+            </p>
+            <ul class="toc-list">
+                <li data-article="article-1" class="active">How did I get a LZ4 XCFramework</li>
+                <li data-article="article-2" class="active">How did I get a CFITSIO XCFramework</li>
+                <li data-article="article-3" class="active">How did I get a SOFA XCFramework</li>
+                <li data-article="article-4" class="active">How did I import a XCFramework (into a Xcode project)</li>
+            </ul>
+        </aside>
+        <!-- RIGHT: Article contents -->
+        <section class="article-area">
+            <article id="article-1" class="article active">
+                <h1>How did I get a LZ4 XCFramework</h1>
+                <p>
+                    I get a LZ4 XCFramework from its source. Here is how:<br><br>
+                    . Download LZ4 source code<br>
+                </p>
+                <p class="code-area">
+                    % git clone https://github.com/lz4/lz4.git<br>
+                    % cd lz4<br>
+                </p>
+                <p>
+                    . Compile for iOS device (arm64)<br>
+                </p>
+                <p class="code-area">
+                    % make clean<br>
+                    % make liblz4.a TARGET_OS=iOS<br>
+                    % mv liblz4.a liblz4-ios-device.a<br>
+                </p>
+                <p>
+                    . Compile for iOS simulator (arm64 for Apple Silicon CPU, x86_64 for Intel CPU)<br>
+                </p>
+                <p class="code-area">
+                    % make clean<br>
+                    % make liblz4.a TARGET_OS=iOSSimulator TARGET_ARCHS="arm64 x86_64"<br>
+                    % mv liblz4.a liblz4-ios-simulator.a<br>
+                </p>
+                <p>
+                    . Create XCFramework
+                </p>
+                <p class="code-area">
+                    % xcodebuild -create-xcframework -library liblz4-ios-device -headers /path/to/lz4/include -library liblz4-ios-simulator -headers /path/to/lz4/include -output liblz4-ios.xcframework<br>
+                </p>
+                <p>
+                    Here I got an error: <a class="code-area-inline">xcodebuild -create-xcframework: A library with the identifier 'macos-arm64' already exists</a>. Then I ran <a class="code-area-inline">lipo -info</a> to check architectures. <a class="code-area-inline">lipo -info liblz4-ios-device.a</a> output <a class="code-area-inline">'Non-fat file liblz4-ios-device.a is architecture: arm64'</a>. This is expected. <a class="code-area-inline">lipo -info liblz4-ios-simulator.a</a> output <a class="code-area-inline">'Non-fat file liblz4-ios-simulator.a is architecture: arm64'</a>. This is unexpected. The <a class="code-area-inline">make</a> command had ignored <a class="code-area-inline">x86_64</a>. So I had to build the library file for simulator manually:
+                </p>
+                <p class="code-area">
+                    % rm -v liblz4-ios-simulator.a<br>
+                    % make clean<br>
+                    // Build for x86_64<br>
+                    % clang -arch x86_64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -c lib/lz4.c -o liblz4-ios-simulator-x86_64.o<br>
+                    // Build for arm64<br>
+                    % clang -arch arm64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -c lib/lz4.c -o liblz4-ios-simulator-arm64.o<br>
+                    // Create static libraries<br>
+                    % ar rcs liblz4-ios-simulator-x86_64.a liblz4-ios-simulator-x86_64.o<br>
+                    % ar rcs liblz4-ios-simulator-arm64.a liblz4-ios-simulator-arm64.o<br>
+                    // Merge into a fat library<br>
+                    % lipo -create -output liblz4-ios-simulator.a liblz4-ios-simulator-x86_64.a liblz4-ios-simulator-arm64.a<br>
+                </p>
+                <p>
+                    Then I ran <a class="code-area-inline">lipo -info liblz4-ios-simulator.a</a>, it output <a class="code-area-inline">'Architectures in the fat file: liblz4-ios-simulator.a are: arm64 x86_64'</a>. I ran <a class="code-area-inline">xcodebuild -create-xcframework</a>, I got the <a class="code-area-inline">liblz4-ios.xcframework</a>. I <a class="code-area-inline">ls liblz4-ios.xcframework</a>, I found it had subdirectories: <a class="code-area-inline">ios-arm64_x86_64-simulator/, macos-arm64/</a>. The <a class="code-area-inline">ios-arm64_x86_64-simulator/</a> one is expected, while the <a class="code-area-inline">macos-arm64/</a> is not, it should be <a class="code-area-inline">ios-arm64/</a>.<br>
+                </p>
+                <p>
+                    Then I cleaned the previously made <a class="code-area-inline">liblz4-ios-device.a</a> and remade the library with<br>
+                </p>
+                <p class="code-area">
+                    % clang -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=12.0 -c lib/lz4.c -o liblz4-ios-device.o<br>
+                    % ar rcs liblz4-ios-device.a liblz4-ios-device.o<br>
+                </p>
+                <p>
+                    The <a class="code-area-inline">-miphoneos-version-min</a> option explicitly makes the object file for iOS, not macOS. I reran the <a class="code-area-inline">xcodebuild -create-xcframework</a>, in the resultant <a class="code-area-inline">liblz4-ios.xcframework</a>, the expected <a class="code-area-inline">ios-arm64/</a> appeared; it has the library <a class="code-area-inline">liblz4-ios-device.a</a>.<br>
+                </p>
+                <p>
+                    . Drag and drop the <a class="code-area-inline">liblz4-ios.xcframework</a> into Xcode's Frameworks and Libraries section.<br>
+                    . Done.<br><br>
+                </p>
+            </article>
+
+            <article id="article-2" class="article">
+                <h1>How did I get a CFITSIO XCFramework</h1>
+                <p>
+                    I get a CFITSIO XCFramework from its source. Here is how:<br><br>
+                    . Download CFITSIO source and enter the directory
+                </p>
+                <p class="code-area">
+                    % curl -O https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio_latest.tar.gz<br>
+                    % tar -xvf cfitsio_latest.tar<br>
+                    % cd cfitsio<br>
+                </p>
+                <p>
+                    . Compile CFITSIO for iOS device with
+                </p>
+                <p class="code-area">
+                    % make distclean<br>
+                    % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib CC="$(xcrun --sdk iphoneos --find clang)" CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -miphoneos-version-min=12.0" --prefix="/path/to/install/into"<br>
+                    % make<br>
+                    % make install<br>
+                    % cp -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-ios-device.a<br>
+                </p>
+                <p>
+                    In here, I ran into an error at <a class="code-area-inline">make install</a>: <a class="code-area-inline">cfileio.c:14:12: fatal error: curl/curl.h file not found</a>. Then I added <a class="code-area-inline">--disable-curl</a> option for <a class="code-area-inline">configure</a>, actually I don't need remote file access via HTTP/FTP. Then I ran <a class="code-area-inline">make</a>, the <a class="code-area-inline">curl</a> problem seemed okay, but I saw a new error: <a class="code-area-inline">utilities/fpackutil.c:926:17: error: 'system' is unavaliable: not available on iOS.</a> The <a class="code-area-inline">system()</a> function is not available on iOS for security reasons. So I found the line <a class="code-area-inline">system(command)</a> in <a class="code-area-inline">fpackutil.c</a> and commented it out. Then I successfully built the library file for iOS device.
+                </p>
+                <p>
+                    . Compile for iOS simulator (arm64) with
+                </p>
+                <p class="code-area">
+                    % make distclean<br>
+                    % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib --disable-curl CC="$(xcrun --sdk iphonesimulator --find clang)" CFLAGS="-arch arm64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -mios-simulator-version-min=12.0" --prefix="/path/to/install/into"<br>
+                    % make<br>
+                    % make install<br>
+                    % cp -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-arm64.a<br>
+                </p>
+                <p>
+                    . Compile for iOS simulator (x86_64) with
+                </p>
+                <p class="code-area">
+                    % make distclean<br>
+                    % ./configure --host=arm-apple-darwin --with-bzip2 --with-zlib --disable-curl CC="$(xcrun --sdk iphonesimulator --find clang)" CFLAGS="-arch x86_64 -isysroot $(xcrun --sdk iphonesimulator --show-sdk-path) -mios-simulator-version-min=12.0" --prefix="/path/to/install/into"<br>
+                    % make<br>
+                    % make install<br>
+                    % cp -v /path/to/install/into/lib/libcfitsio.a /my/lib/libcfitsio-iossimulator-x86_64.a<br>
+                </p>
+                <p>
+                    . Create universal simulator library with
+                </p>
+                <p class="code-area">
+                    % cd /my/lib<br>
+                    % lipo -create libcfitsio-iossimulator-arm64.a libcfitsio-iossimulator-x86_64.a -output libcfitsio-ios-simulator.a<br>
+                </p>
+                <p>
+                    . Create XCFramework with
+                </p>
+                <p class="code-area">
+                    % xcodebuild -create-xcframework -library libcfitsio-ios-device.a -headers /path/to/install/into/include -library libcfitsio-ios-simulator.a -headers /path/to/install/into/include -output libcfitsio-ios.xcframework<br>
+                </p>
+                <p>
+                    . Drag and drop the <a class="code-area-inline">libcfitsio-ios.xcframework</a> into Xcode's Frameworks and Libraries section.<br>
+                    . Done. But,
+                </p>
+                <p>
+                    . when I built my Xcode project, I got a warning and an error.<br>The warning is <a class="code-area-inline">duplicate output file '/Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/include/lz4.h' on task: ProcessXCFramework /path/to/app/liblz4-ios.xcframework /Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/liblz4-ios-device.a ios.</a><br><br>The error is <a class="code-area-inline">Multiple commands produce '/Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/include/lz4.h'; Command: ProcessXCFramework /path/to/app/libcfitsio-ios.xcframework /Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/libcfitsio-ios-device.a ios; Command: ProcessXCFramework /path/to/app/liblz4-ios.xcframework /Users/&lt;usrname&gt;/Library/Developer/Xcode/DerivedData/&lt;app&gt;-&lt;hash code&gt;/Build/Products/Debug-iphoneos/liblz4-ios-device.a ios.</a><br><br>As I had also added an LZ4 framework into the project, this error happened because both <a class="code-area-inline">libcfitsio-ios.xcframework</a> and <a class="code-area-inline">liblz4-ios.xcframework</a> include the same header file <a class="code-area-inline">lz4.h</a>. To fix this issue, I rebuilt <a class="code-area-inline">libcfitsio-ios.xcframework</a> with exluding LZ4 headers by adding <a class="code-area-inline">-I/path/to/lz4/include</a> to <a class="code-area-inline">CFLAGS</a> and adding <a class="code-area-inline">-L/path/to/lz4/lib -llz4-ios-device/-llz4-iossimulator-arm64/-llz4-iossimulator-x86_64</a> to <a class="code-area-inline">LDFLAGS</a> for <a class="code-area-inline">configure</a>.
+                </p>
+                <p>
+                    . Really done.
+                </p>
+            </article>
+
+            <article id="article-3" class="article">
+                <h1>How did I get a SOFA XCFramework</h1>
+                <p>
+                    I get a SOFA XCFramework from its source. Here is how:
+                </p>
+                <p>
+                    . After getting the sofa package, <a class="code-area-inline">cd</a> to the <a class="code-area-inline">src</a> subdirectory. Open the <a class="code-area-inline">makefile</a> with a text editor.
+                </p>
+                <p>
+                    . I changed <a class="code-area-inline">INSTALL_DIR</a> to a path I like. But because I won't run <a class="code-area-inline">make install</a>, this doesn't matter much.
+                </p>
+                <p>
+                    . I changed <a class="code-area-inline">CCOMPC</a> to <a class="code-area-inline">/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang</a>
+                </p>
+                <p>
+                    . I removed the original <a class="code-area-inline">CFLAGF</a> variable and added <a class="code-area-inline">CFLAGF_DEVICE</a> variable with setting it <a class="code-area-inline">-c -pedantic -Wall -O -arch arm64 -isysroot "$(xcrun --sdk iphoneos --show-sdk-path)" -miphoneos-version-min=12.0</a>
+                </p>
+                <p>
+                    . I added <a class="code-area-inline">CFLAGF_SIM_ARM64</a> variable with setting it <a class="code-area-inline">-c -pedantic -Wall -O -target arm64-apple-ios-simulator -arch arm64 -isysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)" -miphoneos-version-min=12.0</a>
+                </p>
+                <p>
+                    . I added <a class="code-area-inline">CFLAGF_SIM_X86_64</a> variable with setting it <a class="code-area-inline">-c -pedantic -Wall -O -target x86_64-apple-ios-simulator -arch x86_64 -isysroot "$(xcrun --sdk iphonesimulator --show-sdk-path)" -miphoneos-version-min=12.0</a>
+                </p>
+                <p>
+                    . After the <a class="code-area-inline">SOFA_OBS</a> variable, I added <a class="code-area-inline">SOFA_OBS_DEVICE = $(SOFA_OBS:.o=_device.o)</a>, <a class="code-area-inline">SOFA_OBS_SIM_ARM64 = $(SOFA_OBS:.o=_sim_arm64.o)</a> and <a class="code-area-inline">SOFA_OBS_SIM_X86_64 = $(SOFA_OBS:.o=_sim_x86_64.o)</a>
+                </p>
+                <p>
+                    . In the TARGETS section, I changed <a class="code-area-inline">all:</a> to <a class="code-area-inline">libsofa_device.a libsofa_sim_arm64.a libsofa_sim_x86_64.a</a>
+                </p>
+                <p>
+                    . Because I won't run <a class="code-area-inline">make install</a>, <a class="code-area-inline">make uninstall</a>, <a class="code-area-inline">make check</a>, <a class="code-area-inline">make installcheck test</a> and <a class="code-area-inline">make realclean distclean</a> so I don't change the corresponding targets.
+                </p>
+                <p>
+                    . I added <a class="code-area-inline">$(SOFA_OBS_DEVICE) $(SOFA_OBS_SIM_ARM64) $(SOFA_OBS_SIM_X86_64)</a> for <a class="code-area-inline">clean:</a> target.
+                </p>
+                <p>
+                    . Then in the TARGETS section, I added
+                </p>
+                <p class="code-area">
+                    # Build the device library<br>
+                    libsofa_device.a: $(SOFA_OBS_DEVICE)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $(SOFA_OBS_DEVICE)<br><br>
+            
+                    # Build the simulator libraries<br>
+                    libsofa_sim_arm64.a: $(SOFA_OBS_SIM_ARM64)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $(SOFA_OBS_SIM_ARM64)<br><br>
+
+                    libsofa_sim_x86_64.a: $(SOFA_OBS_SIM_X86_64)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $(SOFA_OBS_SIM_X86_64)<br>
+                </p>
+                <p>
+                    . I commented out all under the "The list of object file dependencies".<br>
+                    . Then I added
+                </p>
+                <p class="code-area"">
+                    # Generic rule for device object files<br>
+                    $(SOFA_OBS_DEVICE): iau%_device.o %.c sofa.h sofam.h<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(CCOMPC) $(CFLAGF_DEVICE) -o $@ $&lt;<br><br>
+                    # Generic rule for simulator object files<br>
+                    $(SOFA_OBS_SIM_ARM64): iau%_sim_arm64.o %.c sofa.h sofam.h<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(CCOMPC) $(CFLAGF_SIM_ARM64) -o $@ $&lt;<br><br>
+                    $(SOFA_OBS_SIM_X86_64): iau%_sim_x86_64.o %.c sofa.h sofam.h<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$(CCOMPC) $(CFLAGF_SIM_X86_64) -o $@ $&lt;
+                </p>
+                <p>
+                    . After saving the changes for the <a class="code-area-inline">makefile</a>, I ran <a class="code-area-inline">make</a> with obtaining <a class="code-area-inline">libsofa_device.a</a>, <a class="code-area-inline">libsofa_sim_arm64.a</a> and <a class="code-area-inline">libsofa_sim_x86_64.a</a><br>
+                    . Then I ran
+                </p>
+                <p class="code-area">
+                    % lipo -create libsofa_sim_arm64.a libsofa_sim_x86_64.a -output libsofa_sim.a
+                </p>
+                <p id="tip_text">
+                    to combine the two simulator libraries.<br>
+                    . Then I made a directory <a class="code-area-inline">include</a> and copied <a class="code-area-inline">sofa.h</a> and <a class="code-area-inline">sofam.h</a> into.<br>
+                    . Then I ran
+                </p>
+                <p class="code-area">
+                    % xcodebuild -create-xcframework -library libsofa_device.a -headers /path/to/include -library libsofa_sim.a -headers /path/to/include -output libsofa-ios.xcframework
+                </p>
+                <p>
+                    . Done.
+                </p>
+            </article>
+
+            <article id="article-4" class="article">
+                <h1>How did I import a XCFramework (into a Xcode project)</h1>
+                <p>
+                    Let me take the <a class="code-area-inline">libsofa-ios.xcframework</a> as an example. I'd like to import it into my Xcode project. Here are what I did:
+                </p>
+                <p>
+                    . Click the project at the top of the navigation panel, click the target, go to the <a class="code-area-inline">General</a> tab, scroll down to the <a class="code-area-inline">Frameworks, Libraries and Embeded Content</a> section.
+                </p>
+                <p>
+                    . Click <a class="code-area-inline">+</a>, then <a class="code-area-inline">Add Other ...</a>, <a class="code-area-inline">Add Files ...</a>, choose the framework.
+                </p>
+                <p>
+                    . Set <a class="code-area-inline">Embed</a> as <a class="code-area-inline">Embed &amp; Sign</a>.
+                </p>
+                <p>
+                    . Select <a class="code-area-inline">File &gt; New &gt; File from Template ...</a>, choose <a class="code-area-inline">Header File (.h)</a>, name it <a class="code-area-inline">&lt;project name&gt;-Bridging-Header.h</a>, and save it in the main project folder.
+                </p>
+                <p>
+                    . Inside the bridging header file, add <a class="code-area-inline">#include &lt;sofa.h&gt;</a>
+                </p>
+                <p>
+                    . Select the project in the navigation panel, select the target, go to <a class="code-area-inline">Build Settings</a>, find <a class="code-area-inline">Objective-C Bridging Header</a>, enter the relative path to the header file.
+                </p>
+                <p>
+                    . Done.
+                </p>
+            </article>
+        </section>
+    </main>
+    <script src="scripts/nav_toggle.js"></script>
+    <script src="scripts/light_dark_mode.js"></script>
+    <script src="scripts/article_toggle.js"></script>
+    <script src="scripts/heart_hint.js"></script>
+</body>
